@@ -3,12 +3,12 @@ My recommended developer machine setup for a new mac
 *Generally, I prefer to use a free/open-source software if there's one available.*
 
 ## Recommended apps
-- Browser - [Chrome](https://www.google.com/chrome/)
-- Clipboard Manager - [Maccy](https://maccy.app/)
-- Multi monitor control. Easily move windows between monitors. - [Rectangle](https://rectangleapp.com/)
-- Snapping tool (Images/Vider) [Monosnap](https://monosnap.com/download/mac)
-- Another Video recording tool. This is allow you to narrate what you're showing. Using this for async work with my team for a bit more complex stuff than just a simple short video. [Loom](https://www.loom.com/)
-- Code editor - [IntelliJ](https://www.jetbrains.com/idea/download/)
+- Browser - <a href="https://www.google.com/chrome/" target="_blank">Chrome</a>
+- Clipboard Manager - <a href="https://maccy.app/" target="_blank">Maccy</a>
+- Multi monitor control. Easily move windows between monitors. - <a href="https://rectangleapp.com/" target="_blank">Rectangle</a>
+- Snapping tool (Images/Vider) <a href="https://monosnap.com/download/mac" target="_blank">Monosnap</a>
+- Another Video recording tool. This is allow you to narrate what you're showing. Using this for async work with my team for a bit more complex stuff than just a simple short video. <a href="https://www.loom.com/" target="_blank">Loom</a>
+- Code editor - <a href="https://www.jetbrains.com/idea/download/" target="_blank">IntelliJ</a>
 
 ## Now you can use your terminal to setup other stuff easier without UI
 - brew package manager for mac, just type this in your terminal  `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
