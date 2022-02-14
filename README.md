@@ -15,5 +15,6 @@ My recommended developer machine setup for a new mac
 - iTerm `brew install --cask iterm2`
 - zshell `brew install zsh`
 - oh-my-zsh `sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"`
+- Fig - `brew install --cask fig` (<a href="https://fig.io/" target="_blank">https://fig.io/</a>)
 - git `brew install git`
 - gnupg to sign your git commits `brew install gnupg`
