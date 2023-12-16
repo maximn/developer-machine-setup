@@ -11,6 +11,11 @@ My recommended developer machine setup for a new mac
 - Another Video recording tool. This is allow you to narrate what you're showing. Using this for async work with my team for a bit more complex stuff than just a simple short video. <a href="https://www.loom.com/" target="_blank">Loom</a>
 - Code editor - <a href="https://www.jetbrains.com/idea/download/" target="_blank">IntelliJ</a>
 
+## Terminal apps
+- thefuck : A great tool for accidental typers 'brew install thefuck'
+- btop : A better top app 'brew install btop'
+- fzg : A Fuzzy finder 'brew install fzf'
+
 ## Now you can use your terminal to setup other stuff easier without UI
 - brew package manager for mac, just type this in your terminal  `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
 - iTerm `brew install --cask iterm2`
