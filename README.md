@@ -4,6 +4,7 @@ My recommended developer machine setup for a new mac
 
 ## Recommended apps
 - Browser - <a href="https://www.google.com/chrome/" target="_blank">Chrome</a>
+- Raycast - A Spotlight killer - <a href="https://www.raycast.com/" target="_blank">Raycast</a>
 - Clipboard Manager - <a href="https://maccy.app/" target="_blank">Maccy</a>
 - Multi monitor control. Easily move windows between monitors. - <a href="https://rectangleapp.com/" target="_blank">Rectangle</a>
 - Snapping tool (Images/Vider) <a href="https://monosnap.com/download/mac" target="_blank">Monosnap</a>
