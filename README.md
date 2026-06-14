@@ -1,3 +1,5 @@
+[![Sponsor](https://readme.cash/i/i8wm8qc91d.svg)](https://readme.cash/c/i8wm8qc91d)
+
 # developer-machine-setup
 My recommended developer machine setup for a new mac
 *Generally, I prefer to use a free/open-source software if there's one available.*
