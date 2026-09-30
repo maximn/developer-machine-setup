@@ -16,11 +16,13 @@ My recommended developer machine setup for a new mac
 ## Terminal apps
 - thefuck : A great tool for accidental typers 'brew install thefuck'
 - btop : A better top app 'brew install btop'
-- fzg : A Fuzzy finder 'brew install fzf'
+- fzf : A Fuzzy finder 'brew install fzf'
+- zoxide : A smarter `cd` that remembers the directories you use, so you can jump with `z <partial-name>` (or pick interactively with `zi`, which uses fzf) 'brew install zoxide', then add `eval "$(zoxide init zsh)"` to the end of your `~/.zshrc` (<a href="https://github.com/ajeetdsouza/zoxide" target="_blank">zoxide</a>)
+- herdr : Keeps your AI coding agents running in the background across projects, even when you disconnect 'brew install herdr' (<a href="https://herdr.dev/" target="_blank">herdr.dev</a>)
 
 ## Now you can use your terminal to setup other stuff easier without UI
 - brew package manager for mac, just type this in your terminal  `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
-- iTerm `brew install --cask iterm2`
+- Ghostty - a fast, native, GPU-accelerated terminal (replaces iTerm) `brew install --cask ghostty` (<a href="https://ghostty.org/" target="_blank">https://ghostty.org/</a>)
 - zshell `brew install zsh`
 - oh-my-zsh `sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"`
 - Fig - `brew install --cask fig` (<a href="https://fig.io/" target="_blank">https://fig.io/</a>)
