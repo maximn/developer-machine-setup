@@ -1,30 +1,123 @@
+# developer-machine-setup
+
 [![Sponsor](https://readme.cash/i/i8wm8qc91d.svg)](https://readme.cash/c/i8wm8qc91d)
 
-# developer-machine-setup
-My recommended developer machine setup for a new mac
-*Generally, I prefer to use a free/open-source software if there's one available.*
+My recommended developer setup for a new Mac (Apple Silicon or Intel), installable with one script.
 
-## Recommended apps
-- Browser - <a href="https://arc.net/" target="_blank">ARC</a> / <a href="https://www.google.com/chrome/" target="_blank">Chrome</a>
-- Raycast - A Spotlight killer - <a href="https://www.raycast.com/" target="_blank">Raycast</a> [`brew install --cask raycast`]
-- Clipboard Manager - <a href="https://maccy.app/" target="_blank">Maccy</a>
-- Multi monitor control. Easily move windows between monitors. - <a href="https://rectangleapp.com/" target="_blank">Rectangle</a>
-- Snapping tool (Images/Vider) <a href="https://monosnap.com/download/mac" target="_blank">Monosnap</a>
-- Another Video recording tool. This is allow you to narrate what you're showing. Using this for async work with my team for a bit more complex stuff than just a simple short video. <a href="https://www.loom.com/" target="_blank">Loom</a>
-- Code editor - <a href="https://www.jetbrains.com/idea/download/" target="_blank">IntelliJ</a>
+*Generally, I prefer free/open-source software if there's one available.*
 
-## Terminal apps
-- thefuck : A great tool for accidental typers 'brew install thefuck'
-- btop : A better top app 'brew install btop'
-- fzf : A Fuzzy finder 'brew install fzf'
-- zoxide : A smarter `cd` that remembers the directories you use, so you can jump with `z <partial-name>` (or pick interactively with `zi`, which uses fzf) 'brew install zoxide', then add `eval "$(zoxide init zsh)"` to the end of your `~/.zshrc` (<a href="https://github.com/ajeetdsouza/zoxide" target="_blank">zoxide</a>)
-- herdr : Keeps your AI coding agents running in the background across projects, even when you disconnect 'brew install herdr' (<a href="https://herdr.dev/" target="_blank">herdr.dev</a>)
+## Quick start
 
-## Now you can use your terminal to setup other stuff easier without UI
-- brew package manager for mac, just type this in your terminal  `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
-- Ghostty - a fast, native, GPU-accelerated terminal (replaces iTerm) `brew install --cask ghostty` (<a href="https://ghostty.org/" target="_blank">https://ghostty.org/</a>)
-- zshell `brew install zsh`
-- oh-my-zsh `sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"`
-- Fig - `brew install --cask fig` (<a href="https://fig.io/" target="_blank">https://fig.io/</a>)
-- git `brew install git`
-- gnupg to sign your git commits `brew install gnupg`
+1. Install Apple's Command Line Tools (this also gives you `git`):
+
+   ```sh
+   xcode-select --install
+   ```
+
+2. Clone this repo and run the setup script:
+
+   ```sh
+   git clone https://github.com/maximn/developer-machine-setup.git ~/developer-machine-setup
+   cd ~/developer-machine-setup
+   ./setup.sh
+   ```
+
+3. Optional: apply developer-friendly macOS settings (read [the script](macos-defaults.sh) first, it's short):
+
+   ```sh
+   ./macos-defaults.sh
+   ```
+
+Want a different selection? Edit the [`Brewfile`](Brewfile) before running `./setup.sh`: comment out what you don't want, uncomment what you do.
+
+### What `setup.sh` does
+
+- Installs [Homebrew](https://brew.sh/) if it's missing and adds it to your `PATH` in `~/.zprofile`
+- Installs everything in the [`Brewfile`](Brewfile) with `brew bundle`
+- Adds one `source` line to the end of `~/.zshrc` that loads [`dotfiles/zshrc`](dotfiles/zshrc)
+- Adds an include to the top of `~/.gitconfig` that loads [`dotfiles/gitconfig`](dotfiles/gitconfig)
+- Turns on commit signing with your SSH key, if you have one and haven't set up signing already
+- Lets the Homebrew `docker` CLI find the `compose` and `buildx` plugins
+
+It never overwrites your existing files, and it's safe to run again: that's also how you install anything you add to the `Brewfile` later. Your own settings in `~/.zshrc` and `~/.gitconfig` still apply, and those in `~/.gitconfig` take precedence. The config is loaded from the cloned repo, so keep it where you cloned it.
+
+## What gets installed
+
+### Terminal and shell
+
+| Tool | What it's for |
+| --- | --- |
+| [Ghostty](https://ghostty.org/) | Fast, native, GPU-accelerated terminal (replaces iTerm) |
+| [Starship](https://starship.rs/) | Fast, informative prompt. Replaces oh-my-zsh themes without the slow startup |
+| [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) | Suggests commands from your history as you type. Press → to accept |
+| [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) | Colors commands as you type, so typos show up red before you press Enter |
+
+zsh is already the default shell on macOS, so there's nothing to install for it.
+
+### Command-line tools
+
+| Tool | What it's for |
+| --- | --- |
+| [git](https://git-scm.com/) | Newer than the version Apple ships |
+| [gh](https://cli.github.com/) | GitHub from the terminal: PRs, issues, `gh auth login` |
+| [delta](https://github.com/dandavison/delta) | Readable, syntax-highlighted `git diff` and `git log -p` |
+| [fzf](https://github.com/junegunn/fzf) | Fuzzy finder. **Ctrl-R** searches history, **Ctrl-T** finds files |
+| [zoxide](https://github.com/ajeetdsouza/zoxide) | A smarter `cd`: jump with `z <partial-name>`, or pick interactively with `zi` |
+| [btop](https://github.com/aristocratos/btop) | A better `top` |
+| [ripgrep](https://github.com/BurntSushi/ripgrep) | Very fast code search: `rg` |
+| [fd](https://github.com/sharkdp/fd) | A simpler, faster `find` |
+| [bat](https://github.com/sharkdp/bat) | `cat` with syntax highlighting |
+| [eza](https://github.com/eza-community/eza) | Modern `ls` (`ls`, `ll` and `la` use it) |
+| [jq](https://jqlang.org/) | Query and format JSON |
+| [mise](https://mise.jdx.dev/) | Installs and switches Node, Python, Java and other runtime versions per project: `mise use node@22` |
+
+### Containers
+
+Both replace Docker Desktop: they run a small Linux VM so `docker` commands work. Pick one.
+
+| Tool | What it's for |
+| --- | --- |
+| [Colima](https://github.com/abiosoft/colima) | **Installed by default.** Open source and free for everyone. Command line only: `colima start` |
+| [OrbStack](https://orbstack.dev/) | Polished Mac app that starts faster and uses less memory and battery. Free for personal use, paid for commercial use. To use it instead, uncomment `orbstack` in the `Brewfile` and comment out the `colima` and `docker*` lines |
+
+### AI coding agents
+
+| Tool | What it's for |
+| --- | --- |
+| [herdr](https://herdr.dev/) | Keeps your AI coding agents running in the background across projects, even when you disconnect |
+
+The `Brewfile` also has commented-out lines for the Claude Code and Codex CLI agents.
+
+### Apps
+
+| App | What it's for |
+| --- | --- |
+| [Chrome](https://www.google.com/chrome/) | Browser. I also like [Arc](https://arc.net/), but it only gets maintenance updates since its developer moved on to Dia |
+| [Raycast](https://www.raycast.com/) | A Spotlight killer: app launcher, snippets, and much more |
+| [Maccy](https://maccy.app/) | Clipboard history manager |
+| [Rectangle](https://rectangleapp.com/) | Snap windows into halves and thirds, and move them between monitors with keyboard shortcuts |
+| [Loom](https://www.loom.com/) | Record your screen while narrating. Great for async explanations that are more complex than a quick video |
+| [Bitwarden](https://bitwarden.com/) | Open-source password manager |
+| [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) | Code editor. For a lighter editor, [Zed](https://zed.dev/) and [VS Code](https://code.visualstudio.com/) are commented out in the `Brewfile` |
+
+Installed by hand, since it isn't available through Homebrew:
+
+- [Monosnap](https://monosnap.ai/download/mac) - screenshots and short videos with annotations. For quick captures, macOS's built-in **Cmd+Shift+5** also works.
+
+## Git commit signing
+
+`setup.sh` signs commits with your SSH key (`~/.ssh/id_ed25519`), which is simpler than GPG. If you don't have a key yet:
+
+```sh
+ssh-keygen -t ed25519 -C "you@example.com"
+./setup.sh                                                  # turns on signing
+gh ssh-key add ~/.ssh/id_ed25519.pub --type authentication  # for git push over SSH
+gh ssh-key add ~/.ssh/id_ed25519.pub --type signing         # "Verified" badge on GitHub
+```
+
+## Keeping up to date
+
+```sh
+brew update && brew upgrade   # upgrade everything installed with Homebrew
+git pull && ./setup.sh        # pick up changes to this repo
+```

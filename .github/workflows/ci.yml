@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1" # weekly, to catch dead links and removed packages
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          args: --no-progress --max-retries 3 --accept 200,206,429 README.md
+          fail: true
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: DavidAnson/markdownlint-cli2-action@v24
+        with:
+          globs: "*.md"
+      - name: shellcheck
+        run: shellcheck setup.sh macos-defaults.sh
+
+  brewfile:
+    runs-on: macos-latest
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - uses: actions/checkout@v7
+      - name: Every Brewfile entry still exists in Homebrew
+        run: |
+          brew info --formula $(brew bundle list --file=Brewfile --formula) > /dev/null
+          brew info --cask $(brew bundle list --file=Brewfile --cask) > /dev/null
