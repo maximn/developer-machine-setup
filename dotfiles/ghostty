@@ -1,0 +1,5 @@
+# Loaded from ~/.config/ghostty/config by setup.sh (config-file = ...).
+
+# Left Option sends Alt, so terminal apps like herdr receive alt+<key>.
+# Right Option still types special characters (€, ñ, ∞).
+macos-option-as-alt = left
