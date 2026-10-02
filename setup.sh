@@ -67,33 +67,8 @@ else
   note "added to the end of ~/.zshrc"
 fi
 
-step "Git config"
-GIT_INCLUDE="$REPO_DIR/dotfiles/gitconfig"
-touch "$HOME/.gitconfig"
-if git config --global --get-all include.path 2>/dev/null | grep -qxF "$GIT_INCLUDE"; then
-  note "already included from ~/.gitconfig"
-else
-  # At the top, so anything already in ~/.gitconfig takes precedence.
-  prepend_to_file "$HOME/.gitconfig" "$(printf '[include]\n\tpath = "%s"\n' "$GIT_INCLUDE")"
-  note "included at the top of ~/.gitconfig"
-fi
-
-SSH_KEY="$HOME/.ssh/id_ed25519.pub"
-if [[ -n "$(git config --global user.signingkey || true)" ]]; then
-  note "commit signing already configured"
-elif [[ -f "$SSH_KEY" ]]; then
-  git config --global gpg.format ssh
-  git config --global user.signingkey "$SSH_KEY"
-  git config --global commit.gpgsign true
-  note "commits will be signed with $SSH_KEY"
-  note "add it to GitHub as a signing key: gh ssh-key add $SSH_KEY --type signing"
-else
-  note "no SSH key yet, so commit signing is off. Create one, then re-run ./setup.sh:"
-  note "  ssh-keygen -t ed25519 -C \"you@example.com\""
-fi
-
 step "Ghostty config"
-GHOSTTY_CONFIG="$HOME/.config/ghostty/config"
+GHOSTTY_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/ghostty/config"
 GHOSTTY_LINE="config-file = \"$REPO_DIR/dotfiles/ghostty\""
 mkdir -p "$(dirname "$GHOSTTY_CONFIG")"
 touch "$GHOSTTY_CONFIG"
@@ -118,6 +93,31 @@ elif ! grep -q '^\[keys\]' "$HERDR_CONFIG"; then
   note "added Option+1..9 tab switching to $HERDR_CONFIG"
 else
   note "add switch_tab = \"alt+1..9\" under [keys] in $HERDR_CONFIG"
+fi
+
+step "Git config"
+GIT_INCLUDE="$REPO_DIR/dotfiles/gitconfig"
+touch "$HOME/.gitconfig"
+if git config --global --get-all include.path 2>/dev/null | grep -qxF "$GIT_INCLUDE"; then
+  note "already included from ~/.gitconfig"
+else
+  # At the top, so anything already in ~/.gitconfig takes precedence.
+  prepend_to_file "$HOME/.gitconfig" "$(printf '[include]\n\tpath = "%s"\n' "$GIT_INCLUDE")"
+  note "included at the top of ~/.gitconfig"
+fi
+
+SSH_KEY="$HOME/.ssh/id_ed25519.pub"
+if [[ -n "$(git config --global user.signingkey || true)" ]]; then
+  note "commit signing already configured"
+elif [[ -f "$SSH_KEY" ]]; then
+  git config --global gpg.format ssh
+  git config --global user.signingkey "$SSH_KEY"
+  git config --global commit.gpgsign true
+  note "commits will be signed with $SSH_KEY"
+  note "add it to GitHub as a signing key: gh ssh-key add $SSH_KEY --type signing"
+else
+  note "no SSH key yet, so commit signing is off. Create one, then re-run ./setup.sh:"
+  note "  ssh-keygen -t ed25519 -C \"you@example.com\""
 fi
 
 step "Docker CLI plugins (compose, buildx)"
