@@ -101,7 +101,7 @@ if grep -qxF "$GHOSTTY_LINE" "$GHOSTTY_CONFIG"; then
   note "already loaded from $GHOSTTY_CONFIG"
 else
   printf '\n%s\n' "$GHOSTTY_LINE" >> "$GHOSTTY_CONFIG"
-  note "added to the end of $GHOSTTY_CONFIG (reload Ghostty with Cmd+Shift+,)"
+  note "added to the end of $GHOSTTY_CONFIG (applies to new Ghostty windows)"
 fi
 
 step "herdr config"
