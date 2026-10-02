@@ -67,6 +67,18 @@ else
   note "added to the end of ~/.zshrc"
 fi
 
+step "Ghostty config"
+GHOSTTY_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/ghostty/config"
+GHOSTTY_LINE="config-file = \"$REPO_DIR/dotfiles/ghostty\""
+mkdir -p "$(dirname "$GHOSTTY_CONFIG")"
+touch "$GHOSTTY_CONFIG"
+if grep -qxF "$GHOSTTY_LINE" "$GHOSTTY_CONFIG"; then
+  note "already loaded from $GHOSTTY_CONFIG"
+else
+  printf '\n%s\n' "$GHOSTTY_LINE" >> "$GHOSTTY_CONFIG"
+  note "added to the end of $GHOSTTY_CONFIG"
+fi
+
 step "Git config"
 GIT_INCLUDE="$REPO_DIR/dotfiles/gitconfig"
 touch "$HOME/.gitconfig"

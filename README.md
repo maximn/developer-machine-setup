@@ -35,6 +35,7 @@ Want a different selection? Edit the [`Brewfile`](Brewfile) before running `./se
 - Installs [Homebrew](https://brew.sh/) if it's missing and adds it to your `PATH` in `~/.zprofile`
 - Installs everything in the [`Brewfile`](Brewfile) with `brew bundle`
 - Adds one `source` line to the end of `~/.zshrc` that loads [`dotfiles/zshrc`](dotfiles/zshrc)
+- Adds a `config-file` line to `~/.config/ghostty/config` that loads [`dotfiles/ghostty`](dotfiles/ghostty), which makes **Cmd+K** clear the screen inside herdr and tmux too
 - Adds an include to the top of `~/.gitconfig` that loads [`dotfiles/gitconfig`](dotfiles/gitconfig)
 - Turns on commit signing with your SSH key, if you have one and haven't set up signing already
 - Lets the Homebrew `docker` CLI find the `compose` and `buildx` plugins
