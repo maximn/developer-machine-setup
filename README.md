@@ -35,7 +35,8 @@ Want a different selection? Edit the [`Brewfile`](Brewfile) before running `./se
 - Installs [Homebrew](https://brew.sh/) if it's missing and adds it to your `PATH` in `~/.zprofile`
 - Installs everything in the [`Brewfile`](Brewfile) with `brew bundle`
 - Adds one `source` line to the end of `~/.zshrc` that loads [`dotfiles/zshrc`](dotfiles/zshrc)
-- Adds a `config-file` line to `~/.config/ghostty/config` that loads [`dotfiles/ghostty`](dotfiles/ghostty), which makes **Cmd+K** clear the screen inside herdr and tmux too
+- Adds a `config-file` line to `~/.config/ghostty/config` that loads [`dotfiles/ghostty`](dotfiles/ghostty), which makes **Cmd+K** clear the screen inside herdr and tmux too, and makes the left Option key work as Alt
+- Creates `~/.config/herdr/config.toml` from [`dotfiles/herdr.toml`](dotfiles/herdr.toml) if you don't have one, or adds the tab shortcut to the one you have
 - Adds an include to the top of `~/.gitconfig` that loads [`dotfiles/gitconfig`](dotfiles/gitconfig)
 - Turns on commit signing with your SSH key, if you have one and haven't set up signing already
 - Lets the Homebrew `docker` CLI find the `compose` and `buildx` plugins
@@ -88,6 +89,20 @@ Both replace Docker Desktop: they run a small Linux VM so `docker` commands work
 | [herdr](https://herdr.dev/) | Keeps your AI coding agents running in the background across projects, even when you disconnect |
 
 The `Brewfile` also has commented-out lines for the Claude Code and Codex CLI agents.
+
+herdr works like tmux: press **Ctrl+b**, let go, then the action key. Press **Ctrl+b ?** to list them all. The ones you'll use most:
+
+| Keys | What it does |
+| --- | --- |
+| **Ctrl+b c** | Create a new tab |
+| **Ctrl+b n** / **Ctrl+b p** | Next / previous tab |
+| **Option+1** … **Option+9** | Jump straight to tab 1-9 (set up by `setup.sh`; uses the left Option key) |
+| **Ctrl+b v** | Split into two panes side by side |
+| **Ctrl+b -** | Split into two panes, one above the other |
+| **Ctrl+b h** / **j** / **k** / **l** | Move to the pane left / below / above / right |
+| **Ctrl+b z** | Zoom the current pane to fill the tab; press again to restore the layout |
+
+macOS uses **Ctrl+1** … **Ctrl+9** for switching desktops, which is why tab switching uses Option. For that, `setup.sh` makes Ghostty treat the left Option key as Alt; the right Option key still types characters like € and ñ.
 
 ### Apps
 

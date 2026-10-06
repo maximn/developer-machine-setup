@@ -76,7 +76,23 @@ if grep -qxF "$GHOSTTY_LINE" "$GHOSTTY_CONFIG"; then
   note "already loaded from $GHOSTTY_CONFIG"
 else
   printf '\n%s\n' "$GHOSTTY_LINE" >> "$GHOSTTY_CONFIG"
-  note "added to the end of $GHOSTTY_CONFIG"
+  note "added to the end of $GHOSTTY_CONFIG (applies to new Ghostty windows)"
+fi
+
+step "herdr config"
+# herdr's config.toml has no include directive, so it is copied rather than linked.
+HERDR_CONFIG="$HOME/.config/herdr/config.toml"
+if [[ ! -f "$HERDR_CONFIG" ]]; then
+  mkdir -p "$(dirname "$HERDR_CONFIG")"
+  cp "$REPO_DIR/dotfiles/herdr.toml" "$HERDR_CONFIG"
+  note "created $HERDR_CONFIG"
+elif grep -q '^switch_tab' "$HERDR_CONFIG"; then
+  note "tab shortcut already set in $HERDR_CONFIG"
+elif ! grep -q '^\[keys\]' "$HERDR_CONFIG"; then
+  printf '\n[keys]\nswitch_tab = "alt+1..9"\n' >> "$HERDR_CONFIG"
+  note "added Option+1..9 tab switching to $HERDR_CONFIG"
+else
+  note "add switch_tab = \"alt+1..9\" under [keys] in $HERDR_CONFIG"
 fi
 
 step "Git config"

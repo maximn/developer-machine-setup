@@ -1,0 +1,7 @@
+# Copied to ~/.config/herdr/config.toml by setup.sh when you don't have one yet.
+# Reload a running herdr after editing: herdr server reload-config
+
+[keys]
+# Ctrl+1..9 is taken by macOS for switching desktops. Needs Ghostty's
+# macos-option-as-alt (see dotfiles/ghostty) so Option arrives as Alt.
+switch_tab = "alt+1..9"

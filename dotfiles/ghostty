@@ -5,3 +5,7 @@
 # clear_screen while a full-screen app (herdr, tmux) is running and sends the
 # key on as an escape code, which shows up in the shell as "7;9u".
 keybind = super+k=text:\x0c
+
+# Left Option sends Alt, so terminal apps like herdr receive alt+<key>.
+# Right Option still types special characters (€, ñ, ∞).
+macos-option-as-alt = left
