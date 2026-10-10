@@ -58,6 +58,7 @@ else
     # It has to come before pam_tid.so, so it goes at the top.
     tmp="$(mktemp)"
     { printf 'auth       optional       %s ignore_ssh\n' "$REATTACH"; cat "$SUDO_LOCAL"; } > "$tmp"
+    # shellcheck disable=SC2024  # only the write needs sudo; the temp file is ours
     sudo tee "$SUDO_LOCAL" < "$tmp" >/dev/null
     rm -f "$tmp"
     echo "Touch ID for sudo now works inside herdr and tmux too."
