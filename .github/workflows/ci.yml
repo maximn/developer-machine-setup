@@ -37,7 +37,56 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - uses: actions/checkout@v7
-      - name: Every Brewfile entry still exists in Homebrew
+      - name: Every Brewfile entry still exists in Homebrew and isn't deprecated
         run: |
-          brew info --formula $(brew bundle list --file=Brewfile --formula) > /dev/null
-          brew info --cask $(brew bundle list --file=Brewfile --cask) > /dev/null
+          brew info --json=v2 --formula $(brew bundle list --file=Brewfile --formula) > formulae.json
+          brew info --json=v2 --cask $(brew bundle list --file=Brewfile --cask) > casks.json
+          # brew info still succeeds for deprecated and disabled packages, which are about to go away.
+          retiring="$(jq -r '(.formulae[], .casks[]) | select(.deprecated or .disabled)
+            | "\(.token // .name): \(if .disabled then "disabled" else "deprecated" end) (\(.disable_reason // .deprecation_reason // "no reason given"))"' \
+            formulae.json casks.json)"
+          if [[ -n "$retiring" ]]; then
+            echo "$retiring"
+            exit 1
+          fi
+
+  setup:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - name: First run
+        run: ./setup.sh
+      - name: Second run changes nothing
+        run: |
+          snapshot() {
+            brew list --formula --versions
+            brew list --cask --versions
+            for file in ~/.zprofile ~/.zshrc ~/.gitconfig ~/.config/ghostty/config \
+                        ~/.config/herdr/config.toml ~/.docker/config.json; do
+              echo "== $file"
+              cat "$file" 2>/dev/null || echo "(missing)"
+            done
+          }
+          snapshot > first-run.txt
+          ./setup.sh
+          snapshot > second-run.txt
+          diff -u first-run.txt second-run.txt
+      - name: An interactive zsh starts without errors
+        run: |
+          # Under a pty, because zsh can't switch its line editor on without one
+          # and says "can't change option: zle" whatever the config. One perl pass
+          # drops everything a terminal adds by itself: escape sequences (the
+          # prompt), control characters, and the caret notation the pty echoes for
+          # the EOF that ends the session. Whatever is left is a real message.
+          output="$(script -q /dev/null zsh -i -c exit 2>&1 | perl -ne '
+            s/\e\][^\a\e]*(?:\a|\e\\)//g;        # window title
+            s/\e\[[0-9;?]*[a-zA-Z]//g;             # colors, cursor moves
+            s/\e[=>]//g;                           # keypad mode
+            s/[\x00-\x08\x0b-\x1f\x7f]//g;         # other control characters
+            next if /^(?:\^[\x3f\x40-\x5f])*\s*$/;  # ^D and friends, blank lines
+            print')"
+          if [[ -n "$output" ]]; then
+            echo "$output"
+            exit 1
+          fi

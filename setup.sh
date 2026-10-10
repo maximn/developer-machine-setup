@@ -55,7 +55,10 @@ if ! grep -q 'brew shellenv' "$HOME/.zprofile"; then
 fi
 
 step "Apps and tools from the Brewfile"
-brew bundle --file="$REPO_DIR/Brewfile"
+# A failed install doesn't stop the setup: the steps below don't need it.
+# The failures are listed at the end.
+BUNDLE_FAILED=""
+brew bundle --file="$REPO_DIR/Brewfile" || BUNDLE_FAILED=1
 
 step "Shell config"
 ZSHRC_LINE="source \"$REPO_DIR/dotfiles/zshrc\""
@@ -150,4 +153,11 @@ note "- Optional macOS tweaks: ./macos-defaults.sh"
 if [[ -z "$(git config --global user.email || true)" ]]; then
   note "- Set your git identity: git config --global user.name \"Your Name\""
   note "                         git config --global user.email \"you@example.com\""
+fi
+
+if [[ -n "$BUNDLE_FAILED" ]]; then
+  step "Some Brewfile entries didn't install"
+  brew bundle check --file="$REPO_DIR/Brewfile" --no-upgrade --verbose 2>&1 | sed 's/^/    /' || true
+  note "Look for \"Error:\" in the brew bundle output above, fix it, then re-run ./setup.sh"
+  exit 1
 fi

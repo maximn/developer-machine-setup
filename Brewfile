@@ -1,6 +1,10 @@
 # Everything setup.sh installs. Run on its own with: brew bundle --file=Brewfile
 # Comment out anything you don't want before running.
 
+# Take over apps you already installed by hand (like Chrome) instead of failing
+# with "It seems there is already an App at ...".
+cask_args adopt: true
+
 # --- Shell & terminal ---
 cask "ghostty"                  # fast, native, GPU-accelerated terminal
 brew "starship"                 # fast, minimal prompt (replaces oh-my-zsh themes)
