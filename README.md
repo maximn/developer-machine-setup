@@ -22,7 +22,7 @@ My recommended developer setup for a new Mac (Apple Silicon or Intel), installab
    ./setup.sh
    ```
 
-3. Optional: apply developer-friendly macOS settings (read [the script](macos-defaults.sh) first, it's short):
+3. Optional: apply developer-friendly macOS settings, including Touch ID for `sudo` (read [the script](macos-defaults.sh) first, it's short):
 
    ```sh
    ./macos-defaults.sh
@@ -64,15 +64,16 @@ zsh is already the default shell on macOS, so there's nothing to install for it.
 | [git](https://git-scm.com/) | Newer than the version Apple ships |
 | [gh](https://cli.github.com/) | GitHub from the terminal: PRs, issues, `gh auth login` |
 | [delta](https://github.com/dandavison/delta) | Readable, syntax-highlighted `git diff` and `git log -p` |
-| [fzf](https://github.com/junegunn/fzf) | Fuzzy finder. **Ctrl-R** searches history, **Ctrl-T** finds files |
+| [fzf](https://github.com/junegunn/fzf) | Fuzzy finder. **Ctrl-R** searches history, **Ctrl-T** finds files (with a preview), **Option-C** jumps to a folder. Uses fd, so it skips files your `.gitignore` lists |
 | [zoxide](https://github.com/ajeetdsouza/zoxide) | A smarter `cd`: jump with `z <partial-name>`, or pick interactively with `zi` |
 | [btop](https://github.com/aristocratos/btop) | A better `top` |
 | [ripgrep](https://github.com/BurntSushi/ripgrep) | Very fast code search: `rg` |
 | [fd](https://github.com/sharkdp/fd) | A simpler, faster `find` |
-| [bat](https://github.com/sharkdp/bat) | `cat` with syntax highlighting |
+| [bat](https://github.com/sharkdp/bat) | `cat` with syntax highlighting. Also colors `man` pages |
 | [eza](https://github.com/eza-community/eza) | Modern `ls` (`ls`, `ll` and `la` use it) |
 | [jq](https://jqlang.org/) | Query and format JSON |
 | [mise](https://mise.jdx.dev/) | Installs and switches Node, Python, Java and other runtime versions per project: `mise use node@22` |
+| [pam-reattach](https://github.com/fabianishere/pam_reattach) | Lets Touch ID approve `sudo` inside herdr and tmux too. [`macos-defaults.sh`](macos-defaults.sh) turns Touch ID for `sudo` on |
 
 ### Containers
 
