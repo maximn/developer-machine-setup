@@ -37,7 +37,45 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - uses: actions/checkout@v7
-      - name: Every Brewfile entry still exists in Homebrew
+      - name: Every Brewfile entry still exists in Homebrew and isn't deprecated
         run: |
-          brew info --formula $(brew bundle list --file=Brewfile --formula) > /dev/null
-          brew info --cask $(brew bundle list --file=Brewfile --cask) > /dev/null
+          brew info --json=v2 --formula $(brew bundle list --file=Brewfile --formula) > formulae.json
+          brew info --json=v2 --cask $(brew bundle list --file=Brewfile --cask) > casks.json
+          # brew info still succeeds for deprecated and disabled packages, which are about to go away.
+          retiring="$(jq -r '(.formulae[], .casks[]) | select(.deprecated or .disabled)
+            | "\(.token // .name): \(if .disabled then "disabled" else "deprecated" end) (\(.disable_reason // .deprecation_reason // "no reason given"))"' \
+            formulae.json casks.json)"
+          if [[ -n "$retiring" ]]; then
+            echo "$retiring"
+            exit 1
+          fi
+
+  setup:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - name: First run
+        run: ./setup.sh
+      - name: Second run changes nothing
+        run: |
+          snapshot() {
+            brew list --formula --versions
+            brew list --cask --versions
+            for file in ~/.zprofile ~/.zshrc ~/.gitconfig ~/.config/ghostty/config \
+                        ~/.config/herdr/config.toml ~/.docker/config.json; do
+              echo "== $file"
+              cat "$file" 2>/dev/null || echo "(missing)"
+            done
+          }
+          snapshot > first-run.txt
+          ./setup.sh
+          snapshot > second-run.txt
+          diff -u first-run.txt second-run.txt
+      - name: zsh starts without errors
+        run: |
+          output="$(zsh -i -c exit 2>&1)"
+          if [[ -n "$output" ]]; then
+            echo "$output"
+            exit 1
+          fi

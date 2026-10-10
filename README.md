@@ -33,7 +33,7 @@ Want a different selection? Edit the [`Brewfile`](Brewfile) before running `./se
 ### What `setup.sh` does
 
 - Installs [Homebrew](https://brew.sh/) if it's missing and adds it to your `PATH` in `~/.zprofile`
-- Installs everything in the [`Brewfile`](Brewfile) with `brew bundle`
+- Installs everything in the [`Brewfile`](Brewfile) with `brew bundle`. Apps you already installed yourself, like Chrome, are handed over to Homebrew rather than installed again
 - Adds one `source` line to the end of `~/.zshrc` that loads [`dotfiles/zshrc`](dotfiles/zshrc)
 - Adds a `config-file` line to `~/.config/ghostty/config` that loads [`dotfiles/ghostty`](dotfiles/ghostty), which makes **Cmd+K** clear the screen inside herdr and tmux too, and makes the left Option key work as Alt
 - Creates `~/.config/herdr/config.toml` from [`dotfiles/herdr.toml`](dotfiles/herdr.toml) if you don't have one, or adds the tab shortcut to the one you have
@@ -41,7 +41,7 @@ Want a different selection? Edit the [`Brewfile`](Brewfile) before running `./se
 - Turns on commit signing with your SSH key, if you have one and haven't set up signing already
 - Lets the Homebrew `docker` CLI find the `compose` and `buildx` plugins
 
-It never overwrites your existing files, and it's safe to run again: that's also how you install anything you add to the `Brewfile` later. Your own settings in `~/.zshrc` and `~/.gitconfig` still apply, and those in `~/.gitconfig` take precedence. The config is loaded from the cloned repo, so keep it where you cloned it.
+If something in the `Brewfile` fails to install, the other steps still run and the failures are listed at the end. It never overwrites your existing files, and it's safe to run again: that's also how you install anything you add to the `Brewfile` later. Your own settings in `~/.zshrc` and `~/.gitconfig` still apply, and those in `~/.gitconfig` take precedence. The config is loaded from the cloned repo, so keep it where you cloned it.
 
 ## What gets installed
 
