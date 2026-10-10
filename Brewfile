@@ -41,6 +41,7 @@ cask "maccy"                    # clipboard manager
 cask "rectangle"                # window snapping
 cask "loom"                     # narrated screen recordings
 cask "bitwarden"                # open-source password manager
+cask "tailscale-app"            # private network to reach your other machines
 cask "intellij-idea"
 # cask "zed"                    # lightweight open-source editor
 # cask "visual-studio-code"
