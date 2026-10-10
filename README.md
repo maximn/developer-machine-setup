@@ -115,6 +115,7 @@ macOS uses **Ctrl+1** … **Ctrl+9** for switching desktops, which is why tab sw
 | [Rectangle](https://rectangleapp.com/) | Snap windows into halves and thirds, and move them between monitors with keyboard shortcuts |
 | [Loom](https://www.loom.com/) | Record your screen while narrating. Great for async explanations that are more complex than a quick video |
 | [Bitwarden](https://bitwarden.com/) | Open-source password manager |
+| [Tailscale](https://tailscale.com/) | Private network that connects your machines wherever they are, so you can reach them (and the agents herdr keeps running on them) by name |
 | [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) | Code editor. For a lighter editor, [Zed](https://zed.dev/) and [VS Code](https://code.visualstudio.com/) are commented out in the `Brewfile` |
 
 Installed by hand, since it isn't available through Homebrew:
