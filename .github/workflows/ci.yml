@@ -72,9 +72,14 @@ jobs:
           ./setup.sh
           snapshot > second-run.txt
           diff -u first-run.txt second-run.txt
-      - name: zsh starts without errors
+      - name: An interactive zsh starts without errors
         run: |
-          output="$(zsh -i -c exit 2>&1)"
+          # Under a pty: zsh can't switch its line editor on without one and says
+          # "can't change option: zle" whatever the config. Escape sequences are
+          # stripped so the prompt doesn't count as output.
+          output="$(script -q /dev/null zsh -i -c exit 2>&1 | tr -d '\r' \
+            | perl -pe 's/\e\][^\a\e]*(?:\a|\e\\)//g; s/\e\[[0-9;?]*[a-zA-Z]//g; s/\e[=>]//g' \
+            | sed '/^[[:space:]]*$/d')"
           if [[ -n "$output" ]]; then
             echo "$output"
             exit 1
