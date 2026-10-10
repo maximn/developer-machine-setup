@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Optional macOS settings that suit development. Read through and delete what you don't want.
-# Some settings (key repeat) only apply after you log out and back in.
+# Some settings (key repeat) only apply after you log out and back in. Turning on
+# Touch ID for sudo asks for your password.
 set -euo pipefail
 
 if [[ "$(uname -s)" != "Darwin" ]]; then
@@ -34,6 +35,34 @@ defaults write com.apple.dock show-recents -bool false
 # Screenshots go to ~/Screenshots instead of the Desktop
 mkdir -p "$HOME/Screenshots"
 defaults write com.apple.screencapture location -string "$HOME/Screenshots"
+
+# Touch ID for sudo. sudo_local survives macOS updates, unlike /etc/pam.d/sudo. pam-reattach, from the Brewfile, makes it work inside herdr and tmux.
+SUDO_LOCAL=/etc/pam.d/sudo_local
+REATTACH=""
+for prefix in "${HOMEBREW_PREFIX:-}" /opt/homebrew /usr/local; do
+  if [[ -n "$prefix" && -f "$prefix/lib/pam/pam_reattach.so" ]]; then
+    REATTACH="$prefix/lib/pam/pam_reattach.so"
+    break
+  fi
+done
+if ! grep -qs sudo_local /etc/pam.d/sudo; then
+  echo "Touch ID for sudo needs macOS 14 (Sonoma) or newer, skipped."
+else
+  if ! grep -qsE '^[[:space:]]*auth.*pam_tid\.so' "$SUDO_LOCAL"; then
+    echo 'auth       sufficient     pam_tid.so' | sudo tee -a "$SUDO_LOCAL" >/dev/null
+    echo "sudo now accepts Touch ID."
+  fi
+  if [[ -z "$REATTACH" ]]; then
+    echo "For Touch ID inside herdr and tmux: brew install pam-reattach, then re-run this script."
+  elif ! grep -qsE '^[[:space:]]*auth.*pam_reattach\.so' "$SUDO_LOCAL"; then
+    # It has to come before pam_tid.so, so it goes at the top.
+    tmp="$(mktemp)"
+    { printf 'auth       optional       %s ignore_ssh\n' "$REATTACH"; cat "$SUDO_LOCAL"; } > "$tmp"
+    sudo tee "$SUDO_LOCAL" < "$tmp" >/dev/null
+    rm -f "$tmp"
+    echo "Touch ID for sudo now works inside herdr and tmux too."
+  fi
+fi
 
 killall Finder Dock SystemUIServer 2>/dev/null || true
 echo "Done. Log out and back in for the keyboard settings to take effect."

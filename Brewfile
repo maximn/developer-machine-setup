@@ -24,6 +24,7 @@ brew "bat"                      # cat with syntax highlighting
 brew "eza"                      # modern ls
 brew "jq"                       # JSON on the command line
 brew "mise"                     # Node/Python/Java/... version manager
+brew "pam-reattach"             # Touch ID for sudo inside herdr and tmux (see macos-defaults.sh)
 
 # --- Containers (pick one) ---
 brew "colima"                   # open-source Docker runtime (CLI only)
