@@ -75,15 +75,18 @@ jobs:
           diff -u first-run.txt second-run.txt
       - name: An interactive zsh starts without errors
         run: |
-          # Under a pty: zsh can't switch its line editor on without one and says
-          # "can't change option: zle" whatever the config. Escape sequences and
-          # control characters are stripped, so the prompt doesn't count as output,
-          # and so are lines of nothing but caret notation (^D), which is how the
-          # pty echoes the EOF that ends the session. What's left is real messages.
-          output="$(script -q /dev/null zsh -i -c exit 2>&1 \
-            | perl -pe 's/\e\][^\a\e]*(?:\a|\e\\)//g; s/\e\[[0-9;?]*[a-zA-Z]//g; s/\e[=>]//g' \
-            | tr -d '\000-\010\013-\037\177' \
-            | sed -E '/^(\^[@-_?])+$/d; /^[[:space:]]*$/d')"
+          # Under a pty, because zsh can't switch its line editor on without one
+          # and says "can't change option: zle" whatever the config. One perl pass
+          # drops everything a terminal adds by itself: escape sequences (the
+          # prompt), control characters, and the caret notation the pty echoes for
+          # the EOF that ends the session. Whatever is left is a real message.
+          output="$(script -q /dev/null zsh -i -c exit 2>&1 | perl -ne '
+            s/\e\][^\a\e]*(?:\a|\e\\)//g;        # window title
+            s/\e\[[0-9;?]*[a-zA-Z]//g;             # colors, cursor moves
+            s/\e[=>]//g;                           # keypad mode
+            s/[\x00-\x08\x0b-\x1f\x7f]//g;         # other control characters
+            next if /^(?:\^[\x3f\x40-\x5f])*\s*$/;  # ^D and friends, blank lines
+            print')"
           if [[ -n "$output" ]]; then
             echo "$output"
             exit 1
