@@ -38,7 +38,8 @@ Want a different selection? Edit the [`Brewfile`](Brewfile) before running `./se
 - Adds a `config-file` line to `~/.config/ghostty/config` that loads [`dotfiles/ghostty`](dotfiles/ghostty), which makes **Cmd+K** clear the screen inside herdr and tmux too, and makes the left Option key work as Alt
 - Creates `~/.config/herdr/config.toml` from [`dotfiles/herdr.toml`](dotfiles/herdr.toml) if you don't have one, or adds the tab shortcut to the one you have
 - Adds an include to the top of `~/.gitconfig` that loads [`dotfiles/gitconfig`](dotfiles/gitconfig)
-- Turns on commit signing with your SSH key, if you have one and haven't set up signing already
+- Turns on commit signing with your SSH key, if you have one and haven't set up signing already, and lets git check those signatures (`git log --show-signature`)
+- Adds a few lines to the end of `~/.ssh/config` so macOS asks for your SSH key's passphrase once and keeps it in the keychain
 - Lets the Homebrew `docker` CLI find the `compose` and `buildx` plugins
 
 If something in the `Brewfile` fails to install, the other steps still run and the failures are listed at the end. It never overwrites your existing files, and it's safe to run again: that's also how you install anything you add to the `Brewfile` later. Your own settings in `~/.zshrc` and `~/.gitconfig` still apply, and those in `~/.gitconfig` take precedence. The config is loaded from the cloned repo, so keep it where you cloned it.
@@ -126,6 +127,7 @@ Installed by hand, since it isn't available through Homebrew:
 
 ```sh
 ssh-keygen -t ed25519 -C "you@example.com"
+git config --global user.email "you@example.com"            # if you haven't yet
 ./setup.sh                                                  # turns on signing
 gh ssh-key add ~/.ssh/id_ed25519.pub --type authentication  # for git push over SSH
 gh ssh-key add ~/.ssh/id_ed25519.pub --type signing         # "Verified" badge on GitHub

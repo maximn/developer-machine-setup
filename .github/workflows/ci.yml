@@ -63,7 +63,8 @@ jobs:
             brew list --formula --versions
             brew list --cask --versions
             for file in ~/.zprofile ~/.zshrc ~/.gitconfig ~/.config/ghostty/config \
-                        ~/.config/herdr/config.toml ~/.docker/config.json; do
+                        ~/.config/herdr/config.toml ~/.docker/config.json ~/.ssh/config \
+                        ~/.ssh/allowed_signers; do
               echo "== $file"
               cat "$file" 2>/dev/null || echo "(missing)"
             done

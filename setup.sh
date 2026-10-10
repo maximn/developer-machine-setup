@@ -123,6 +123,47 @@ else
   note "  ssh-keygen -t ed25519 -C \"you@example.com\""
 fi
 
+# Without an allowed signers file, git log --show-signature shows an error instead of "Good signature".
+SIGNING_KEY="$(git config --global user.signingkey || true)"
+[[ -f "${SIGNING_KEY/#\~/$HOME}" ]] && SIGNING_KEY="$(cat "${SIGNING_KEY/#\~/$HOME}")"
+read -r KEY_TYPE KEY_DATA _ <<< "${SIGNING_KEY#key::}" || true
+ALLOWED_SIGNERS="$(git config --global gpg.ssh.allowedSignersFile || true)"
+GIT_EMAIL="$(git config --global user.email || true)"
+if [[ "$(git config --global gpg.format || true)" != ssh || -z "${KEY_DATA:-}" ]]; then
+  :  # not signing with an SSH key
+elif [[ -n "$ALLOWED_SIGNERS" ]]; then
+  if grep -qF "$KEY_DATA" "${ALLOWED_SIGNERS/#\~/$HOME}" 2>/dev/null; then
+    note "signature verification already set up"
+  else
+    note "to verify your signatures, add your key to $ALLOWED_SIGNERS"
+  fi
+elif [[ -z "$GIT_EMAIL" ]]; then
+  note "set your git email (see the end), then re-run ./setup.sh so git can verify your signatures"
+else
+  ALLOWED_SIGNERS="$HOME/.ssh/allowed_signers"
+  if ! grep -qF "$KEY_DATA" "$ALLOWED_SIGNERS" 2>/dev/null; then
+    printf '%s namespaces="git" %s %s\n' "$GIT_EMAIL" "$KEY_TYPE" "$KEY_DATA" >> "$ALLOWED_SIGNERS"
+  fi
+  git config --global gpg.ssh.allowedSignersFile "$ALLOWED_SIGNERS"
+  note "git can verify your signatures now: git log --show-signature"
+fi
+
+step "SSH config"
+SSH_CONFIG="$HOME/.ssh/config"
+if grep -qi '^[[:space:]]*UseKeychain' "$SSH_CONFIG" 2>/dev/null; then
+  note "already uses the macOS keychain"
+else
+  [[ -d "$HOME/.ssh" ]] || mkdir -m 700 "$HOME/.ssh"
+  [[ -f "$SSH_CONFIG" ]] || (umask 077 && touch "$SSH_CONFIG")
+  { echo; printf '%s\n' \
+    '# Added by developer-machine-setup: ask for SSH key passphrases once, then keep them in the keychain' \
+    'Host *' \
+    '  IgnoreUnknown UseKeychain' \
+    '  UseKeychain yes' \
+    '  AddKeysToAgent yes'; } >> "$SSH_CONFIG"
+  note "added keychain settings to the end of $SSH_CONFIG"
+fi
+
 step "Docker CLI plugins (compose, buildx)"
 DOCKER_CONFIG_FILE="$HOME/.docker/config.json"
 PLUGIN_DIR="$HOMEBREW_PREFIX/lib/docker/cli-plugins"
