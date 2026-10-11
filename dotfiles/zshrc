@@ -19,6 +19,22 @@ setopt SHARE_HISTORY HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS
 autoload -Uz compinit && compinit
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'  # case-insensitive
 
+# Defaults, so anything you set before this file is loaded still wins
+export EDITOR="${EDITOR:-vim}"  # git commit messages, crontab -e
+if command -v bat >/dev/null; then
+  export MANPAGER="${MANPAGER:-sh -c 'col -bx | bat -l man -p'}"  # colored man pages
+fi
+
+# fzf: list files with fd (skips what .gitignore lists) and preview them with bat
+if command -v fd >/dev/null; then
+  export FZF_DEFAULT_COMMAND="${FZF_DEFAULT_COMMAND:-fd --type f --hidden --exclude .git}"
+  export FZF_CTRL_T_COMMAND="${FZF_CTRL_T_COMMAND:-$FZF_DEFAULT_COMMAND}"
+  export FZF_ALT_C_COMMAND="${FZF_ALT_C_COMMAND:-fd --type d --hidden --exclude .git}"
+fi
+if command -v bat >/dev/null && [[ -z "$FZF_CTRL_T_OPTS" ]]; then
+  export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:500 {}'"
+fi
+
 # Tools
 command -v starship >/dev/null && eval "$(starship init zsh)"
 command -v mise >/dev/null && eval "$(mise activate zsh)"
