@@ -44,7 +44,7 @@ cask "google-chrome"
 cask "raycast"                  # Spotlight replacement
 cask "maccy"                    # clipboard manager
 cask "rectangle"                # window snapping
-cask "loom"                     # narrated screen recordings
+cask "cap"                      # open-source narrated screen recordings
 cask "bitwarden"                # open-source password manager
 cask "tailscale-app"            # private network to reach your other machines
 cask "intellij-idea"
