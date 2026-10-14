@@ -59,6 +59,12 @@ step "Apps and tools from the Brewfile"
 # The failures are listed at the end.
 BUNDLE_FAILED=""
 brew bundle --file="$REPO_DIR/Brewfile" || BUNDLE_FAILED=1
+# Your own additions, kept out of git so `git pull` never conflicts with them.
+BREWFILE_LOCAL="$REPO_DIR/Brewfile.local"
+if [[ -f "$BREWFILE_LOCAL" ]]; then
+  step "Apps and tools from Brewfile.local"
+  brew bundle --file="$BREWFILE_LOCAL" || BUNDLE_FAILED=1
+fi
 
 step "Shell config"
 ZSHRC_LINE="source \"$REPO_DIR/dotfiles/zshrc\""
@@ -80,6 +86,13 @@ if grep -qxF "$GHOSTTY_LINE" "$GHOSTTY_CONFIG"; then
 else
   printf '\n%s\n' "$GHOSTTY_LINE" >> "$GHOSTTY_CONFIG"
   note "added to the end of $GHOSTTY_CONFIG (applies to new Ghostty windows)"
+fi
+# Listed after the repo's file, so it loads later and its settings win. The ? makes it
+# optional, and the path is relative to $GHOSTTY_CONFIG.
+GHOSTTY_LOCAL_LINE="config-file = ?config.local"
+if ! grep -qxF "$GHOSTTY_LOCAL_LINE" "$GHOSTTY_CONFIG"; then
+  printf '%s\n' "$GHOSTTY_LOCAL_LINE" >> "$GHOSTTY_CONFIG"
+  note "settings in $(dirname "$GHOSTTY_CONFIG")/config.local now override the repo's"
 fi
 
 step "herdr config"
@@ -198,7 +211,10 @@ fi
 
 if [[ -n "$BUNDLE_FAILED" ]]; then
   step "Some Brewfile entries didn't install"
-  brew bundle check --file="$REPO_DIR/Brewfile" --no-upgrade --verbose 2>&1 | sed 's/^/    /' || true
+  for brewfile in "$REPO_DIR/Brewfile" "$BREWFILE_LOCAL"; do
+    [[ -f "$brewfile" ]] || continue
+    brew bundle check --file="$brewfile" --no-upgrade --verbose 2>&1 | sed 's/^/    /' || true
+  done
   note "Look for \"Error:\" in the brew bundle output above, fix it, then re-run ./setup.sh"
   exit 1
 fi

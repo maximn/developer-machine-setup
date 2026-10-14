@@ -55,8 +55,11 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
-      - name: First run
-        run: ./setup.sh
+      - name: First run, with a Brewfile.local
+        run: |
+          echo 'brew "hello"' > Brewfile.local
+          ./setup.sh
+          brew list hello > /dev/null  # fails if Brewfile.local was skipped
       - name: Second run changes nothing
         run: |
           snapshot() {

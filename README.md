@@ -28,14 +28,14 @@ My recommended developer setup for a new Mac (Apple Silicon or Intel), installab
    ./macos-defaults.sh
    ```
 
-Want a different selection? Edit the [`Brewfile`](Brewfile) before running `./setup.sh`: comment out what you don't want, uncomment what you do.
+Want a different selection? Edit the [`Brewfile`](Brewfile) before running `./setup.sh`: comment out what you don't want, uncomment what you do. To add your own apps and tools, put them in a `Brewfile.local` next to it, in the same format (`brew "lazygit"`, `cask "stats"`). git ignores that file, so `git pull` never conflicts with it.
 
 ### What `setup.sh` does
 
 - Installs [Homebrew](https://brew.sh/) if it's missing and adds it to your `PATH` in `~/.zprofile`
-- Installs everything in the [`Brewfile`](Brewfile) with `brew bundle`. Apps you already installed yourself, like Chrome, are handed over to Homebrew rather than installed again
+- Installs everything in the [`Brewfile`](Brewfile) with `brew bundle`, then everything in your `Brewfile.local` if you have one. Apps you already installed yourself, like Chrome, are handed over to Homebrew rather than installed again
 - Adds one `source` line to the end of `~/.zshrc` that loads [`dotfiles/zshrc`](dotfiles/zshrc)
-- Adds a `config-file` line to `~/.config/ghostty/config` that loads [`dotfiles/ghostty`](dotfiles/ghostty), which makes **Cmd+K** clear the screen inside herdr and tmux too, and makes the left Option key work as Alt
+- Adds a `config-file` line to `~/.config/ghostty/config` that loads [`dotfiles/ghostty`](dotfiles/ghostty), which makes **Cmd+K** clear the screen inside herdr and tmux too, and makes the left Option key work as Alt. A second line loads `~/.config/ghostty/config.local` after it, if you create one, so your settings there override the repo's
 - Creates `~/.config/herdr/config.toml` from [`dotfiles/herdr.toml`](dotfiles/herdr.toml) if you don't have one, or adds the tab shortcut to the one you have
 - Adds an include to the top of `~/.gitconfig` that loads [`dotfiles/gitconfig`](dotfiles/gitconfig)
 - Turns on commit signing with your SSH key, if you have one and haven't set up signing already, and lets git check those signatures (`git log --show-signature`)
