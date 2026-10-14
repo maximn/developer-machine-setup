@@ -1,5 +1,7 @@
 # Loaded from your Ghostty config by setup.sh (config-file = ...). Ghostty
 # reads included files last, so these settings override your own config.
+# To override them in turn, put your settings in config.local next to your
+# Ghostty config: setup.sh loads it after this file.
 
 # Cmd+K: send Ctrl+L instead of Ghostty's own clear_screen. Ghostty skips
 # clear_screen while a full-screen app (herdr, tmux) is running and sends the
