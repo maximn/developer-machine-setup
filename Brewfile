@@ -21,6 +21,7 @@ brew "btop"                     # a better top
 brew "ripgrep"                  # fast grep: `rg`
 brew "fd"                       # fast, friendly find
 brew "bat"                      # cat with syntax highlighting
+brew "glow"                     # renders Markdown in the terminal
 brew "eza"                      # modern ls
 brew "jq"                       # JSON on the command line
 brew "mise"                     # Node/Python/Java/... version manager
