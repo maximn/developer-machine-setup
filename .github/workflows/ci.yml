@@ -5,11 +5,17 @@ on:
     branches: [main]
   pull_request:
   schedule:
-    - cron: "0 6 * * 1" # weekly, to catch dead links and removed packages
+    - cron: "0 6 * * 1" # weekly, to catch dead links, removed packages and setup drift
   workflow_dispatch:
 
 permissions:
   contents: read
+
+# A new push to a PR cancels its run in progress. Runs on main and scheduled
+# runs always finish.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   links:
@@ -31,13 +37,17 @@ jobs:
       - name: shellcheck
         run: shellcheck setup.sh macos-defaults.sh
 
-  brewfile:
+  setup:
+    # macOS minutes cost 10x. The PR already ran this, and the weekly schedule
+    # catches drift on main.
+    if: github.event_name != 'push'
     runs-on: macos-latest
-    env:
-      HOMEBREW_NO_AUTO_UPDATE: 1
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
       - name: Every Brewfile entry still exists in Homebrew and isn't deprecated
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: 1
         run: |
           brew info --json=v2 --formula $(brew bundle list --file=Brewfile --formula) > formulae.json
           brew info --json=v2 --cask $(brew bundle list --file=Brewfile --cask) > casks.json
@@ -49,12 +59,6 @@ jobs:
             echo "$retiring"
             exit 1
           fi
-
-  setup:
-    runs-on: macos-latest
-    timeout-minutes: 60
-    steps:
-      - uses: actions/checkout@v7
       - name: First run, with a Brewfile.local
         run: |
           echo 'brew "hello"' > Brewfile.local
