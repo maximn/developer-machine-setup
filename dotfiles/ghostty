@@ -11,3 +11,8 @@ keybind = super+k=text:\x0c
 # Left Option sends Alt, so terminal apps like herdr receive alt+<key>.
 # Right Option still types special characters (€, ñ, ∞).
 macos-option-as-alt = left
+
+# Ask before a program sets the clipboard (OSC 52). Anything printed to the
+# terminal can carry the sequence -- a directory name in the prompt, a file
+# you cat -- so it should not be able to replace what you paste next.
+clipboard-write = ask
