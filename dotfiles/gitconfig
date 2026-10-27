@@ -5,7 +5,8 @@
 	defaultBranch = main
 [push]
 	autoSetupRemote = true
-	followTags = true          # push annotated tags along with the commits
+	# No followTags: fetch auto-follows tags from every remote, so it would push
+	# a fork's tags to your origin. Push tags explicitly: git push origin <tag>
 [fetch]
 	prune = true
 [rerere]

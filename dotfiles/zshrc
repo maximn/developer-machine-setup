@@ -35,6 +35,11 @@ if command -v bat >/dev/null && [[ -z "$FZF_CTRL_T_OPTS" ]]; then
   export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:500 {}'"
 fi
 
+# mise asks before using a cloned repo's .tool-versions (it already does for
+# mise.toml), and never installs a tool just because you typed its name.
+export MISE_PARANOID="${MISE_PARANOID:-1}"
+export MISE_NOT_FOUND_AUTO_INSTALL="${MISE_NOT_FOUND_AUTO_INSTALL:-false}"
+
 # Tools
 command -v starship >/dev/null && eval "$(starship init zsh)"
 command -v mise >/dev/null && eval "$(mise activate zsh)"
