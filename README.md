@@ -70,6 +70,7 @@ zsh is already the default shell on macOS, so there's nothing to install for it.
 | [ripgrep](https://github.com/BurntSushi/ripgrep) | Very fast code search: `rg` |
 | [fd](https://github.com/sharkdp/fd) | A simpler, faster `find` |
 | [bat](https://github.com/sharkdp/bat) | `cat` with syntax highlighting. Also colors `man` pages |
+| [glow](https://github.com/charmbracelet/glow) | Renders Markdown in the terminal: `glow README.md`, or just `glow` to browse the Markdown files in a folder |
 | [eza](https://github.com/eza-community/eza) | Modern `ls` (`ls`, `ll` and `la` use it) |
 | [jq](https://jqlang.org/) | Query and format JSON |
 | [mise](https://mise.jdx.dev/) | Installs and switches Node, Python, Java and other runtime versions per project: `mise use node@22` |
